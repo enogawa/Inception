@@ -1,0 +1,24 @@
+services:
+  nginx:
+    build: ./requirements/nginx
+    ports: 
+    - "8080:80"
+    tty: true
+    networks:
+      - network
+    volumes:
+    - volume:/var/www/html
+
+  wordpress:
+    build: ./requirements/wordpress
+    tty: true
+    networks:
+      - network
+    volumes:
+      - volume:/var/www/html
+
+volumes:
+    volume:
+
+networks:
+    network:
