@@ -1,2 +1,17 @@
 FROM	debian:bullseye
 
+
+RUN apt-get update
+RUN apt-get install -y mariadb-server vim
+RUN sed -i 's/^bind-address/#bind-address/' /etc/mysql/mariadb.conf.d/50-server.cnf
+
+# 初期化スクリプトをコピー
+COPY ./init.sql /docker-entrypoint-initdb.d/
+RUN	chmod +x /docker-entrypoint-initdb.d/init.sql
+# カスタムエントリポイントスクリプトをコピー
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+ENTRYPOINT ["docker-entrypoint.sh"]
+#CMD ["mysqld_safe"]
+CMD ["bash"]

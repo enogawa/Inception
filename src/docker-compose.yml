@@ -1,24 +1,62 @@
+version: '3'
+
+# networks:
+#   network:
+#     driver: bridge
+#     ipam:
+#       driver: default
+#       config:
+#         - subnet: 192.168.200.0/24
+#         - gateway: 192.168.200.1
+
 services:
   nginx:
     build: ./requirements/nginx
     ports: 
-    - "8080:80"
-    tty: true
+    - "127.0.0.1:8080:80"
+    restart: always
     networks:
-      - network
+      - nginx
     volumes:
     - volume:/var/www/html
+    - ./requirements/nginx/default:/etc/nginx/sites-available/default
+    depends_on:
+      - wordpress
 
   wordpress:
     build: ./requirements/wordpress
-    tty: true
+    restart: always
     networks:
-      - network
+      - nginx
+      - db
+    ports: 
+    - "8081:81"
     volumes:
       - volume:/var/www/html
+      - ./requirements/wordpress/www.conf:/etc/php/7.4/fpm/pool.d/www.conf
+    environment:
+      WORDPRESS_DB_HOST: mariadb:3306
+      WORDPRESS_DB_USER: user
+      WORDPRESS_DB_PASSWORD: password
+      WORDPRESS_DB_NAME: wordpress_db
+
+  mariadb:
+    build: ./requirements/mariadb
+    restart: always
+    networks:
+      - db
+    volumes:
+      - volume:/var/www/html
+#      - ./requirements/mariadb/50-server.cnf:/etc/mysql/mariadb.conf.d/50-server.cnf
+    environment:
+      MYSQL_DATABASE: wordpress_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    tty: true
 
 volumes:
     volume:
 
 networks:
-    network:
+    nginx: 
+    db: 
