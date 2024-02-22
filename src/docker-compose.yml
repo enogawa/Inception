@@ -29,8 +29,6 @@ services:
     networks:
       - nginx
       - db
-    ports: 
-    - "8081:81"
     volumes:
       - volume:/var/www/html
       - ./requirements/wordpress/www.conf:/etc/php/7.4/fpm/pool.d/www.conf
@@ -46,8 +44,8 @@ services:
     networks:
       - db
     volumes:
-      - volume:/var/www/html
-#      - ./requirements/mariadb/50-server.cnf:/etc/mysql/mariadb.conf.d/50-server.cnf
+#      - volume:/var/www/html
+      - ./requirements/mariadb/50-server.cnf:/etc/mysql/mariadb.conf.d/50-server.cnf
     environment:
       MYSQL_DATABASE: wordpress_db
       MYSQL_USER: user
@@ -60,3 +58,4 @@ volumes:
 networks:
     nginx: 
     db: 
+
