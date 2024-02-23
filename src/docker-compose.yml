@@ -9,43 +9,49 @@ services:
     networks:
       - nginx
     volumes:
-      - volume:/var/www/html
+      - wordpress:/var/www/html
       - ./requirements/nginx/default:/etc/nginx/sites-available/default
     depends_on:
-      - wordpress
+      wordpress:
+        condition: service_started
 
   wordpress:
     build: ./requirements/wordpress
     restart: always
     depends_on:
-      - mariadb
+      mariadb:
+        condition: service_healthy
     networks:
       - nginx
       - db
     volumes:
-      - volume:/var/www/html
+      - wordpress:/var/www/html
       - ./requirements/wordpress/www.conf:/etc/php/7.4/fpm/pool.d/www.conf
-    environment:
-      WORDPRESS_DB_HOST: mariadb:3306
-      WORDPRESS_DB_USER: user
-      WORDPRESS_DB_PASSWORD: password
-      WORDPRESS_DB_NAME: wordpress_db
+    env_file:
+      - ./.env
 
   mariadb:
     build: ./requirements/mariadb
     restart: always
     networks:
       - db
-    environment:
-      MYSQL_DATABASE: wordpress_db
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
-    tty: true
+    volumes:
+      - mariadb:/var/lib/mysql
+    env_file:
+      - ./.env
+    healthcheck:
+      test: ["CMD-SHELL", "mysql --user=user --password=password -e 'SELECT 1'"]
+      interval: 3s
+      timeout: 10s
+      retries: 3
+      start_period: 3s
+
 
 volumes:
-    volume:
+    wordpress:
+    mariadb:
 
 networks:
     nginx: 
-    db: 
+    db:
 
