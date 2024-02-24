@@ -28,7 +28,7 @@ services:
       - wordpress:/var/www/html
       - ./requirements/wordpress/www.conf:/etc/php/7.4/fpm/pool.d/www.conf
     env_file:
-      - ./.env
+      - .env
 
   mariadb:
     build: ./requirements/mariadb
@@ -38,7 +38,7 @@ services:
     volumes:
       - mariadb:/var/lib/mysql
     env_file:
-      - ./.env
+      - .env
     healthcheck:
       test: ["CMD-SHELL", "mysql --user=user --password=password -e 'SELECT 1'"]
       interval: 3s
