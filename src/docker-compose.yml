@@ -10,7 +10,6 @@ services:
       - nginx
     volumes:
       - wordpress:/var/www/html
-      # - /home/enogawa/data/wordpress:/var/www/html
       - ./requirements/nginx/default:/etc/nginx/sites-available/default
     depends_on:
       wordpress:
@@ -27,7 +26,7 @@ services:
       - db
     volumes:
       - wordpress:/var/www/html
-      # - /home/enogawa/data/wordpress:/var/www/html
+      #- /home/enogawa/data/wordpress:/var/www/html
       - ./requirements/wordpress/www.conf:/etc/php/7.4/fpm/pool.d/www.conf
     env_file:
       - .env
@@ -39,7 +38,6 @@ services:
       - db
     volumes:
       - mariadb:/var/lib/mysql
-      #- /home/enogawa/data/mariadb:/var/lib/mysql
     env_file:
       - .env
     healthcheck:
@@ -47,11 +45,20 @@ services:
       interval: 3s
       timeout: 10s
       retries: 3
-      start_period: 3s
+      start_period: 20s
 
 volumes:
     wordpress:
+      driver_opts:
+        type: none
+        device: /home/enogawa/data/wordpress
+        o: bind
+
     mariadb:
+      driver_opts:
+        type: none
+        device: /home/enogawa/data/mariadb
+        o: bind
 
 networks:
     nginx: 
