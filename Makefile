@@ -22,12 +22,6 @@ mariadb:
 wordpress:
 	docker compose -f src/docker-compose.yml exec wordpress bash
 
-prune-images:
-	docker image prune -fa
-
-prune:
-	docker system prune -f
-
 logs:
 	docker compose -f src/docker-compose.yml logs
 
