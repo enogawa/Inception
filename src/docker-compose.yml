@@ -26,7 +26,6 @@ services:
       - db
     volumes:
       - wordpress:/var/www/html
-      #- /home/enogawa/data/wordpress:/var/www/html
       - ./requirements/wordpress/www.conf:/etc/php/7.4/fpm/pool.d/www.conf
     env_file:
       - .env
