@@ -2,12 +2,12 @@ up:
 	docker compose -f src/docker-compose.yml up --build -d
 
 build:
-	docker compose -f src/docker-compose.yml build
+	docker compose -f src/docker-compose.yml up --build
 
 stop:
 	docker compose -f src/docker-compose.yml stop
 
-clean:
+down:
 	docker compose -f src/docker-compose.yml down --rmi all -v
 
 restart:
@@ -25,4 +25,4 @@ wordpress:
 logs:
 	docker compose -f src/docker-compose.yml logs
 
-.PHONY: all build stop clean exec-nginx ips prune-images prune logs
+.PHONY: all build stop down restart nginx mariadb wordpress logs
