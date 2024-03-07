@@ -2,6 +2,7 @@ version: '3'
 
 services:
   nginx:
+    image: nginx
     build: ./requirements/nginx
     ports: 
       - "443:443"
@@ -16,6 +17,7 @@ services:
         condition: service_started
 
   wordpress:
+    image: wordpress
     build: ./requirements/wordpress
     restart: always
     depends_on:
@@ -31,6 +33,7 @@ services:
       - .env
 
   mariadb:
+    image: mariadb
     build: ./requirements/mariadb
     restart: always
     networks:
